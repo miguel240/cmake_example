@@ -1,0 +1,14 @@
+/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/CMakeFiles/test.dir
+/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/CMakeFiles/rebuild_cache.dir
+/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/CMakeFiles/edit_cache.dir
+/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/CMakeFiles/test.dir
+/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/CMakeFiles/rebuild_cache.dir
+/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/CMakeFiles/edit_cache.dir
+/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/CMakeFiles/test.dir
+/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/CMakeFiles/foo.dir
+/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/CMakeFiles/rebuild_cache.dir
+/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/CMakeFiles/test.dir
+/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/CMakeFiles/edit_cache.dir
+/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/CMakeFiles/test_foo.dir

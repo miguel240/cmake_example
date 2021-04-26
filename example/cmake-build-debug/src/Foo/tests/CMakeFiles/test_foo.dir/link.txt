@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/test_foo.dir/test.cpp.o -o ../../../../build/test_foo  -Wl,-rpath,/home/miguelo/Descargas/cmake_example/example/build /usr/lib/x86_64-linux-gnu/libboost_unit_test_framework.a ../../../../build/libfoo.so 

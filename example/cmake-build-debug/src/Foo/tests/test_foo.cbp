@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="test_foo"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\cmake-lib\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\usr\lib\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Boost-1.71.0\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\boost_headers-1.71.0\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\boost_unit_test_framework-1.71.0\;CMake Files\src\;CMake Files\src\Foo\;CMake Files\src\Foo\tests\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="test_foo">
+				<Option output="/home/miguelo/Descargas/cmake_example/example/build/test_foo" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miguelo/Descargas/cmake_example/example/build"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_ALL_NO_LIB"/>
+					<Add directory="/home/miguelo/Descargas/cmake_example/example/src"/>
+					<Add directory="/home/miguelo/Descargas/cmake_example/example/src/Foo/tests/.."/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/Makefile&quot;  VERBOSE=1 test_foo"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="test_foo/fast">
+				<Option output="/home/miguelo/Descargas/cmake_example/example/build/test_foo" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/miguelo/Descargas/cmake_example/example/build"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBOOST_ALL_NO_LIB"/>
+					<Add directory="/home/miguelo/Descargas/cmake_example/example/src"/>
+					<Add directory="/home/miguelo/Descargas/cmake_example/example/src/Foo/tests/.."/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/Makefile&quot;  VERBOSE=1 test_foo/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/miguelo/Descargas/cmake_example/example/cmake-build-debug/src/Foo/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/src/Foo/tests/test.cpp">
+			<Option target="test_foo"/>
+		</Unit>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/cmake-lib/CMakeAuxFunctions.cmake">
+			<Option virtualFolder="CMake Files\cmake-lib\"/>
+		</Unit>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/cmake-lib/CMakeBoostTest.cmake">
+			<Option virtualFolder="CMake Files\cmake-lib\"/>
+		</Unit>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/../../../../../usr/lib/x86_64-linux-gnu/cmake/BoostDetectToolset-1.71.0.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\"/>
+		</Unit>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/../../../../../usr/lib/x86_64-linux-gnu/cmake/Boost-1.71.0/BoostConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Boost-1.71.0\"/>
+		</Unit>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/../../../../../usr/lib/x86_64-linux-gnu/cmake/Boost-1.71.0/BoostConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\Boost-1.71.0\"/>
+		</Unit>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/../../../../../usr/lib/x86_64-linux-gnu/cmake/boost_headers-1.71.0/boost_headers-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\boost_headers-1.71.0\"/>
+		</Unit>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/../../../../../usr/lib/x86_64-linux-gnu/cmake/boost_headers-1.71.0/boost_headers-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\boost_headers-1.71.0\"/>
+		</Unit>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/../../../../../usr/lib/x86_64-linux-gnu/cmake/boost_unit_test_framework-1.71.0/boost_unit_test_framework-config-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\boost_unit_test_framework-1.71.0\"/>
+		</Unit>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/../../../../../usr/lib/x86_64-linux-gnu/cmake/boost_unit_test_framework-1.71.0/boost_unit_test_framework-config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\boost_unit_test_framework-1.71.0\"/>
+		</Unit>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/../../../../../usr/lib/x86_64-linux-gnu/cmake/boost_unit_test_framework-1.71.0/libboost_unit_test_framework-variant-shared.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\boost_unit_test_framework-1.71.0\"/>
+		</Unit>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/../../../../../usr/lib/x86_64-linux-gnu/cmake/boost_unit_test_framework-1.71.0/libboost_unit_test_framework-variant-static.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\boost_unit_test_framework-1.71.0\"/>
+		</Unit>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\"/>
+		</Unit>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/src/Foo/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\Foo\"/>
+		</Unit>
+		<Unit filename="/home/miguelo/Descargas/cmake_example/example/src/Foo/tests/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\Foo\tests\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

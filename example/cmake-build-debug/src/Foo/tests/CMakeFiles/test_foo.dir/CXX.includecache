@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../src/Foo/foo.h
+
+/home/miguelo/Descargas/cmake_example/example/src/Foo/tests/test.cpp
+boost/test/unit_test.hpp
+-
+Foo/foo.h
+-
+
