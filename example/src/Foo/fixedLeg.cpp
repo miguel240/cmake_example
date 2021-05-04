@@ -1,14 +1,18 @@
 #include "fixedLeg.h"
+#include "Foo/fractions/dayCountCalculator.h"
 
-fixedLeg::FixedLeg(float interes) : interes_{interes} {};
 
+FixedLeg::FixedLeg(std::vector<std::string> paymentCalendar, float interest, float nominal) :
+        paymentCalendar_{paymentCalendar},
+        interest_{interest},
+        nominal_{nominal},
+        payments_{} {};
 
-double fixedLeg::getPrice() {
-    double price;
-
-    for (auto fechaPago : calendarioPagos_) {
-        price += exp(- interes * getFraccion(today, fechaPagoo, '360')); // e^-rt
+float FixedLeg::getPrice() {
+    for (const auto date: paymentCalendar_) {
+        //float price = nominal_ * interest_ * leg::getDcf(today, date);
+        // payments_.push_back(std::make_pair(date, price));
     }
+    // leg::getCurrentPrice(payments_); // Aplica el factor descuento
+    return 1;
 }
-
-

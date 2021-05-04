@@ -1,8 +1,9 @@
 #include "zeroCouponCurve.h"
 
-void ZeroCouponCurve::ZeroCouponCurve() {};
+ZeroCouponCurve::ZeroCouponCurve(const std::map<std::string, float> curveData) :
+        zeroCurveData_{curveData} {};
 
-double ZeroCouponCurve::getZeroCoupon(double maturity) {
-    auto it = zeroCurveData.find(maturity);
-    return it != zeroCurveData.end() ? it->second : null;
+float ZeroCouponCurve::getZeroCoupon(const std::string date) {
+    auto it = zeroCurveData_.find(date);
+    return it != zeroCurveData_.end() ? it->second : -1; // como devuelvo null ?
 }

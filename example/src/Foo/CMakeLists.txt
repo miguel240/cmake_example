@@ -1,2 +1,7 @@
 add_subdirectory(tests)
-create_library(NAME foo)
+add_subdirectory(fractions)
+
+create_library(NAME instrument)
+
+
+add_executable(example instrument.cpp)

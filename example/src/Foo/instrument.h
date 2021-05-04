@@ -1,6 +1,13 @@
-#ifndef INSTRUMENT_H
-#define INSTRUMENT_H
+#include <iostream>
+#include <map>
+#include <memory>
 
-void buildInstrument(std::string type);
+#include "zeroCouponCurve.h"
 
-#endif
+class Instrument {
+public:
+    Instrument();
+
+    void buildInstrument(std::string type);
+};
+

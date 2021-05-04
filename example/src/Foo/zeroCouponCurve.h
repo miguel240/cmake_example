@@ -5,15 +5,12 @@
 
 class ZeroCouponCurve {
 public:
-    void ZeroCouponCurve();
+    ZeroCouponCurve(const std::map<std::string, float> curveData);
 
-    double getZeroCoupon(double maturity);
+    float getZeroCoupon(std::string date);
 
 private:
-    const map<double, double> zeroCurveData_ = {{0.5, 4.74},
-                                                {1,   5},
-                                                {1.5, 5.1},
-                                                {2,   5.2}};
+    const std::map<std::string, float> zeroCurveData_;
 };
 
 #endif

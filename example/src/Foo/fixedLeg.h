@@ -1,22 +1,21 @@
 #ifndef FIXEDLEG_H
 #define FIXEDLEG_H
 
-#include "boost/date_time/gregorian/gregorian.hpp"
+#include <vector>
+#include <string>
+#include "leg.h"
 
-
-class FixedLeg : public Leg {
+class FixedLeg : public leg {
 public:
-    FixedLeg(float interes);
+    FixedLeg(std::vector<std::string> paymentCalendar, float interest, float nominal); // el vector se pasa por ref ?
 
-    double getPrice();
+    float getPrice();
 
 private:
-    std::vector<boost::gregorian::date> calendarioPagos_{boost::gregorian::date(2016, 10, 03),
-                                                         boost::gregorian::date(2016, 04, 03),
-                                                         boost::gregorian::date(2017, 10, 02),
-                                                         boost::gregorian::date(2017, 04, 02)};
-    float interes_;
-    auto today{boost::gregorian::date(2016, 04, 01)};
+    std::vector<std::pair<std::string, float>> payments_; // refactor nombre
+    std::vector<std::string> paymentCalendar_;
+    float interest_;
+    float nominal_;
 };
 
 #endif
