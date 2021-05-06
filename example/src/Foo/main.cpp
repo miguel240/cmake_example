@@ -111,9 +111,8 @@ float Thirty_360::compute_daycount(const short years,const short months,
 
 }
 
-int main()
+/*int main()
 {
-
     //prueba1 con los dos formatos.
     Actual_360 test1;
     std::cout <<  test1.compute_daycount("19300101","19300201") << std::endl;
@@ -124,10 +123,6 @@ int main()
 
     std::cout << test2.compute_daycount(boost::gregorian::date(1930,05,01),boost::gregorian::date(1930,06,01))<< std::endl;
     std::cout <<  test2.compute_daycount(0,1,01,01) << std::endl;
-    
-
-
 
     return 0;
-
-}
+}*/
