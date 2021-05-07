@@ -4,7 +4,7 @@
 #include "dayCountCalculator.h"
 
 
-class Actual_360 : public DayCountCalculator {//clase hija
+class Actual_360 : public DayCountCalculator {
 public:
     static float compute_daycount(const std::string &from, const std::string &to);
 
@@ -12,8 +12,7 @@ public:
                                   const boost::gregorian::date &to);
 
     template<class DATE>
-    double operator()(const DATE &start, const DATE &end) const // no entiendo la sobrecarga de este operador
-    {
+    double operator()(const DATE &start, const DATE &end) const {
         return compute_daycount(start, end) / 360.0;
     }
 };

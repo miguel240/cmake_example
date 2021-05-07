@@ -1,19 +1,29 @@
-
 #include "bond.h"
+#include <numeric>
+#include <stdexcept>
 
-
-Bond::Bond(std::unique_ptr<Leg> &fixedLeg, std::shared_ptr<ZeroCouponCurve> &zeroCouponCurve) :
+Bond::Bond(std::unique_ptr<Leg> &fixedLeg, std::shared_ptr<ZeroCouponCurve> zeroCouponCurve) :
         zeroCouponCurve_{zeroCouponCurve} {
     fixedLeg_ = std::move(fixedLeg);
 }
-// cambiar para que devuelva el nominal
-double Bond::operator()() const {
-    auto paymentCalendar = fixedLeg_->getCalendarWithPayments();
-    double price = 0.0;
-    for (auto it : paymentCalendar) {
-        price += it.second * zeroCouponCurve_->getDiscountCurve(it.first);
-    } // todo: accumulate
 
-    return price;
+double Bond::operator()() const {
+    types::payments paymentCalendar = fixedLeg_->getPayments();
+    // In a bond the nominal is returned at maturity
+    paymentCalendar.push_back(std::make_pair(fixedLeg_->getMaturity(),
+                                             fixedLeg_->getNominal()));
+
+    return std::accumulate(paymentCalendar.begin(),
+                           paymentCalendar.end(),
+                           0.0,
+                           [&](double acc, std::pair<types::date, double> &payment) {
+                               return acc + calculatePresentValue(payment.first, payment.second);
+                           });
 }
 
+double Bond::calculatePresentValue(types::date date, double value) const {
+    if (!zeroCouponCurve_->getDiscountCurve(date)) throw "Zero coupon curve incomplete";
+
+    double discountCurve = *zeroCouponCurve_->getDiscountCurve(date);
+    return value * discountCurve;
+}

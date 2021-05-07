@@ -2,18 +2,21 @@
 #include "zeroCouponCurve.h"
 #include "dayCountFraction/actual_360.h"
 
-ZeroCouponCurve::ZeroCouponCurve(const std::map<boost::gregorian::date, double> curveData,
-                                 boost::gregorian::date today) : curveData_{curveData}, today_{today} {}
+ZeroCouponCurve::ZeroCouponCurve(const std::map<types::date, double> &curveData,
+                                 types::date today) : curveData_{curveData}, today_{today} {}
 
-// todo: para que sirve
-double ZeroCouponCurve::getZeroCouponRate(boost::gregorian::date date) const {
-    return 0;
-}
 
-double ZeroCouponCurve::getDiscountCurve(boost::gregorian::date date) const {
+// Return e^-rt or null if not exist the date in the curveData
+boost::optional<double> ZeroCouponCurve::getDiscountCurve(types::date date) const {
     auto it = curveData_.find(date);
-    double zeroRate = (it != curveData_.end() ? it->second : -1); // todo: mirar
+
+    // Key doesn't exists
+    if (it == curveData_.end()) {
+        return boost::optional<double>();
+    }
+
+    double rate = it->second;
     double fractionDate = Actual_360::compute_daycount(today_, date);  // todo: mirar
 
-    return std::exp(-zeroRate * fractionDate);
+    return std::exp(-rate * fractionDate);
 }

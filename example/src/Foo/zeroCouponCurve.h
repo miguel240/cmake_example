@@ -1,21 +1,20 @@
-#ifndef ZEROCOUPONCURVE_H
-#define ZEROCOUPONCURVE_H
+#ifndef ZERO_COUPON_CURVE_H
+#define ZERO_COUPON_CURVE_H
 
 #include <map>
-#include <boost/date_time/gregorian/greg_date.hpp>
+#include "common/types.h"
+#include <boost/optional.hpp>
 
 class ZeroCouponCurve {
 public:
-    ZeroCouponCurve(const std::map<boost::gregorian::date, double> curveData,
-                    boost::gregorian::date today);
+    ZeroCouponCurve(const std::map<types::date, double> &curveData,
+                    types::date today);
 
-    double getZeroCouponRate(boost::gregorian::date date) const; // todo: revisar si se usa
-
-    double getDiscountCurve(boost::gregorian::date date) const;
+    boost::optional<double> getDiscountCurve(types::date date) const;
 
 private:
-    std::map<boost::gregorian::date, double> curveData_;
-    boost::gregorian::date today_;
+    std::map<types::date, double> curveData_;
+    types::date today_;
 };
 
 #endif

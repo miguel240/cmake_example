@@ -8,12 +8,15 @@
 
 class Bond {
 public:
-    Bond(std::unique_ptr<Leg> &receiver,
-         std::shared_ptr<ZeroCouponCurve> &zeroCouponCurve); //todo:mirar ref a shared
+    Bond(std::unique_ptr<Leg> &fixedLeg,
+         std::shared_ptr<ZeroCouponCurve> zeroCouponCurve);
 
     double operator()() const;
 
 private:
+    double calculatePresentValue(types::date date, double value) const;
+
+    // Variables
     std::unique_ptr<Leg> fixedLeg_;
     std::shared_ptr<ZeroCouponCurve> zeroCouponCurve_;
 };
