@@ -1,5 +1,5 @@
 add_subdirectory(tests)
-add_subdirectory(fractions)
+add_subdirectory(dayCountFraction)
 
 create_library(NAME instrument)
 

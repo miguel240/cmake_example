@@ -3,12 +3,13 @@
 
 #include <string>
 #include <vector>
+#include <boost/date_time/gregorian/greg_date.hpp>
 
 class Leg {
 public:
-    //Leg();
+    Leg();
 
-    virtual std::vector<std::pair<std::string, double>> getCalendarWithPayments() const = 0;
+    virtual std::vector<std::pair<boost::gregorian::date, double>> getCalendarWithPayments() ;
 
     virtual ~Leg();
 };
