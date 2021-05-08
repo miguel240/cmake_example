@@ -21,7 +21,6 @@ private:
     // Variables
     std::unique_ptr<Leg> fixedLeg_;
     std::shared_ptr<ZeroCouponCurve> zeroCouponCurve_;
-    Actual_360 dcfCalculator_; // todo: pasarle la del fixed leg
 };
 
 #endif

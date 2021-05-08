@@ -34,7 +34,6 @@ double Bond::calculatePresentValue(types::date date, double value, float numOfPa
 float Bond::getNumOfPaymentsInAYear(const std::vector<types::date> &paymentCalendar) const {
     // In case paymentCalendar only has one payment we return 1 (zero coupon)
     // First position of paymentCalendar contains today's date
-
     return paymentCalendar.size() > 2 ?
-           dcfCalculator_(paymentCalendar.at(1), paymentCalendar.at(2)) : 1;
+           fixedLeg_->calculateDayFraction(paymentCalendar.at(1), paymentCalendar.at(2)) : 1; // preguntar
 }

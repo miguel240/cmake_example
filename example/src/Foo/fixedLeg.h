@@ -29,6 +29,10 @@ public:
         return payments;
     }
 
+    virtual double calculateDayFraction(types::date from, types::date to) const{
+        return dcfCalculator_(from, to);
+    }
+
     virtual types::date getMaturity() const {
         return paymentCalendar_.back();
     }

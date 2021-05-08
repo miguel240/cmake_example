@@ -13,6 +13,8 @@ public:
 
     virtual types::payments getPayments() const = 0;
 
+    virtual double calculateDayFraction(types::date from, types::date to) const = 0;
+
     virtual double getNominal() const = 0;
 
     virtual double getRate() const = 0;
