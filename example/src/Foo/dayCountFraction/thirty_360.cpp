@@ -1,6 +1,6 @@
 #include "thirty_360.h"
 
- auto Thirty_360::compute_daycount(const boost::gregorian::date &from,
+ auto Thirty_360::computeDaycount(const boost::gregorian::date &from,
                                   const boost::gregorian::date &to) {
 
     auto from_struct = from.year_month_day();
@@ -12,15 +12,15 @@
     return ((360 * years) + 30 * (months) + days) / 360.0;
 }
 
-float Thirty_360::compute_daycount(const std::string &from, const std::string &to) {
+float Thirty_360::computeDaycount(const std::string &from, const std::string &to) {
     boost::gregorian::date start = make_date(from);
     boost::gregorian::date end = make_date(to);
-    return Thirty_360::compute_daycount(start, end);
+    return Thirty_360::computeDaycount(start, end);
 }
 
 // Esa funcion recibe años, meses dia inicial y
 // final y calcula los dias total suponiendo cada mes como 30 dias
-float Thirty_360::compute_daycount(const short years, const short months,
+float Thirty_360::computeDaycount(const short years, const short months,
                                    const short days_from,
                                    const short days_to) {
     return ((360 * years) + 30 * (months - 1) +

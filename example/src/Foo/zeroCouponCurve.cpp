@@ -16,7 +16,7 @@ boost::optional<double> ZeroCouponCurve::getDiscountCurve(types::date date) cons
     }
 
     double rate = it->second;
-    double fractionDate = Actual_360::compute_daycount(today_, date);  // todo: mirar
+    double fractionDate = Actual_360::computeDaycount(today_, date);  // todo: mirar, preguntar
 
     return std::exp(-rate * fractionDate);
 }

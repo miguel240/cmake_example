@@ -8,15 +8,25 @@
 
 class Leg {
 public:
-    Leg();
+    Leg(const std::vector<types::date> &paymentCalendar)
+            : paymenCalendar_{paymentCalendar} {};
 
-    virtual types::payments getPayments() const;
+    virtual types::payments getPayments() const = 0;
 
-    virtual double getNominal() const;
+    virtual double getNominal() const = 0;
 
-    virtual types::date getMaturity() const;
+    virtual double getRate() const = 0;
+
+    virtual types::date getMaturity() const = 0;
+
+    std::vector<types::date> getPaymentCalendar() const {
+        return paymenCalendar_;
+    }
 
     virtual ~Leg();
+
+private:
+    std::vector<types::date> paymenCalendar_;
 };
 
 #endif
