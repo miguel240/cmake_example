@@ -7,7 +7,7 @@ message("** CMakeBoostTest ..... Loading")
 include(CMakeParseArguments)
 set(Boost_USE_STATIC_LIBS ON)
 
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+find_package(Boost COMPONENTS unit_test_framework date_time REQUIRED)
 
 enable_testing()
 
@@ -42,7 +42,8 @@ function (boost_test_project)
 
 	file(GLOB SRC_FILES  ${CXX_FILE_EXTENSIONS})
 	add_executable(${PARSED_ARGS_NAME}  ${SRC_FILES})
-	target_link_libraries(${PARSED_ARGS_NAME} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+	target_link_libraries(${PARSED_ARGS_NAME} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${Boost_DATE_TIME_LIBRARY})
+
 
 	foreach(lib_dep ${PARSED_ARGS_DEPS})
         target_link_libraries(${PARSED_ARGS_NAME} ${lib_dep})

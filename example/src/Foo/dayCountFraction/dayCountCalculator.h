@@ -5,8 +5,9 @@
 
 class DayCountCalculator {
 public:
+    // String (YYYY-MM-DD or YYYY/MM/DD) to gregorian date
     static boost::gregorian::date make_date(const std::string &date) {
-        return boost::gregorian::date(boost::gregorian::from_undelimited_string(date));
+        return boost::gregorian::from_string(date);
     }
 };
 

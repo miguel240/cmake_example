@@ -6,7 +6,7 @@
 #include <string>
 //#include "boost/date_time/date_parsing.hpp"
 //#include <boost/algorithm/string.hpp>
-
+/*
 class DayCountCalculator
 {
 public://permite el acceso a la funcion dentro y fuera de la clase
@@ -111,7 +111,7 @@ float Thirty_360::compute_daycount(const short years,const short months,
 
 }
 
-/*int main()
+int main()
 {
     //prueba1 con los dos formatos.
     Actual_360 test1;
