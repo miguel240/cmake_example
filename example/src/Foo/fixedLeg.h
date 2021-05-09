@@ -13,23 +13,33 @@ class FixedLeg : public Leg {
 public:
     FixedLeg(const std::vector<types::date> &paymentCalendar,
              double nominal,
-             double rate) : Leg(paymentCalendar), rate_{rate}, nominal_{nominal} {
+             double rate) : Leg(paymentCalendar),
+                            paymentCalendar_{paymentCalendar},
+                            rate_{rate},
+                            nominal_{nominal} {
         // calendar contains today's date in the first position
         today_ = paymentCalendar.at(0);
     }
 
     virtual types::payments getPayments() const {
-        types::payments payments = {{}};
+        types::payments payments{};
 
-        std::transform(paymentCalendar_.begin() + 1, // todo: posible overflow
-                       paymentCalendar_.end(),
+        for (auto it = paymentCalendar_.begin(); it != paymentCalendar_.end() - 1; ++it) {
+            auto newPayment = std::make_pair(*(it + 1), getPayment(*it, *(it + 1))); //todo
+            payments.push_back(newPayment);
+        }
+
+        /*std::transform(paymentCalendar_.begin(),
+                       paymentCalendar_.end() - 1,
                        std::back_inserter(payments),
-                       [&](const types::date &date) { return std::make_pair(date, getPayment(date)); });
+                       [&](const types::date &from, const types::date &to) {
+                           return std::make_pair(from, getPayment(from, to));
+                       });*/
 
         return payments;
     }
 
-    virtual double calculateDayFraction(types::date from, types::date to) const{
+    virtual double calculateDayFraction(types::date from, types::date to) const {
         return dcfCalculator_(from, to);
     }
 
@@ -46,8 +56,8 @@ public:
     }
 
 private:
-    double getPayment(boost::gregorian::date date) const {
-        double fractionDate = dcfCalculator_(today_, date);
+    double getPayment(types::date from, types::date to) const {
+        double fractionDate = dcfCalculator_(from, to);
         return nominal_ * rate_ * fractionDate;
     };
 

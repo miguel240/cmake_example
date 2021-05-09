@@ -2,7 +2,7 @@
 #include "zeroCouponCurve.h"
 #include "dayCountFraction/actual_360.h"
 
-ZeroCouponCurve::ZeroCouponCurve(const std::map<types::date, double> &curveData,
+ZeroCouponCurve::ZeroCouponCurve(const types::Map &curveData,
                                  types::date today) : curveData_{curveData}, today_{today} {}
 
 

@@ -3,7 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <boost/date_time/gregorian/greg_date.hpp>
 #include "common/types.h"
 
 class Leg {
@@ -25,7 +24,7 @@ public:
         return paymenCalendar_;
     }
 
-    virtual ~Leg();
+    // virtual ~Leg();
 
 private:
     std::vector<types::date> paymenCalendar_;
