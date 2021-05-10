@@ -14,7 +14,6 @@
 #include "fixedLeg.h"
 #include "floatingLeg.h"
 
-
 BOOST_AUTO_TEST_SUITE(day_count_fraction)
 
     BOOST_AUTO_TEST_CASE(test_make_date_boost)
@@ -56,7 +55,7 @@ BOOST_AUTO_TEST_SUITE(day_count_fraction)
         auto yearFraction = dcfCalculator(from, to);
         //BOOST_TEST_MESSAGE(yearFraction);
 
-        BOOST_TEST(yearFraction == 0.5055555555555555, boost::test_tools::tolerance(1e-11));
+        BOOST_TEST(yearFraction == 0.5055555555555555, boost::test_tools::tolerance(1e-10));
     }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -99,26 +98,25 @@ BOOST_AUTO_TEST_SUITE(legs)
 
         auto payments = myFixedLeg->getPayments();
 
-        std::vector<types::date> paymentsDates(4);
-        std::vector<double> paymentValues(4);
+        std::vector<types::date> paymentsDates;
+        std::vector<double> paymentValues;
 
         for (auto payment : payments) {
             paymentsDates.push_back(payment.first);
             paymentValues.push_back(payment.second);
         }
 
-        std::vector<types::date> correctDates(4);
+        std::vector<types::date> correctDates(paymentCalendar.begin() + 1, paymentCalendar.end());
         std::vector<double> correctValues{2.57, 2.53, 2.53, 2.53};
-        std::copy(paymentCalendar.begin() + 1, paymentCalendar.end(), correctDates.begin());
 
-        //BOOST_CHECK_EQUAL_COLLECTIONS()
-
-        BOOST_TEST_MESSAGE(paymentsDates.size());
-        BOOST_TEST_MESSAGE(correctDates.size());
+        // CHECK PAYMENTS DATES
         BOOST_CHECK_EQUAL_COLLECTIONS(paymentsDates.begin(), paymentsDates.end(),
                                       correctDates.begin(), correctDates.end());
 
-
+        // CHECK PAYS
+        for (int i = 0; i < paymentValues.size(); i++) {
+            BOOST_TEST(paymentValues.at(i) == correctValues.at(i), boost::test_tools::tolerance(1e-3));
+        }
     };
 
 
