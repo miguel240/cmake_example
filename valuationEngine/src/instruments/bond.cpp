@@ -9,7 +9,6 @@ Bond::Bond(std::unique_ptr<Leg> &fixedLeg, std::shared_ptr<ZeroCouponCurve> zero
 
 double Bond::operator()() const {
     types::payments paymentCalendar = fixedLeg_->getPayments();
-    float numOfPaymentsInAYear = getNumOfPaymentsInAYear(fixedLeg_->getPaymentCalendar());
 
     // In a bond the nominal is returned at maturity
     // Fixed leg doesn't contemplate this
@@ -20,21 +19,14 @@ double Bond::operator()() const {
                            paymentCalendar.end(),
                            0.0,
                            [&](double acc, std::pair<types::date, double> &payment) {
-                               return acc + calculatePresentValue(payment.first, payment.second, numOfPaymentsInAYear);
+                               return acc + calculatePresentValue(payment.first, payment.second);
                            });
 }
 
-double Bond::calculatePresentValue(types::date date, double value, float numOfPaymentsInAYear) const {
-    //if (!zeroCouponCurve_->getDiscountCurve(date)) throw "Zero coupon curve incomplete";
+double Bond::calculatePresentValue(types::date date, double payment) const {
+    if (!zeroCouponCurve_->getDiscountCurve(date)) throw "Zero coupon curve incomplete";
 
-    //double discountCurve = *zeroCouponCurve_->getDiscountCurve(date);
-    //return value * numOfPaymentsInAYear * discountCurve;
-    return 2;
+    double discountCurve = *zeroCouponCurve_->getDiscountCurve(date);
+    return payment * discountCurve;
 }
 
-float Bond::getNumOfPaymentsInAYear(const std::vector<types::date> &paymentCalendar) const {
-    // In case paymentCalendar only has one payment we return 1 (zero coupon)
-    // First position of paymentCalendar contains today's date
-    return paymentCalendar.size() > 2 ?
-           fixedLeg_->calculateDayFraction(paymentCalendar.at(1), paymentCalendar.at(2)) : 1; // preguntar
-}

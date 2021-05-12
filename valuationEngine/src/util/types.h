@@ -11,6 +11,7 @@ namespace types {
     typedef boost::gregorian::date date;
     typedef std::vector<std::pair<types::date, double>> payments;
     typedef std::map<types::date, double> Map;
+    typedef std::pair<types::date, double> curvePair;
 }
 
 #endif

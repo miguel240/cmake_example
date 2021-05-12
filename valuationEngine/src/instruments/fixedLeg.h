@@ -25,7 +25,7 @@ public:
         types::payments payments{};
 
         for (auto it = paymentCalendar_.begin(); it != paymentCalendar_.end() - 1; ++it) {
-            auto newPayment = std::make_pair(*(it + 1), getPayment(*it, *(it + 1))); //todo
+            auto newPayment = std::make_pair(*(it + 1), getPayment_(*it, *(it + 1))); //todo
             payments.push_back(newPayment);
         }
 
@@ -56,7 +56,7 @@ public:
     }
 
 private:
-    double getPayment(types::date from, types::date to) const {
+    double getPayment_(types::date from, types::date to) const {
         double fractionDate = dcfCalculator_(from, to);
         return nominal_ * rate_ * fractionDate;
     };

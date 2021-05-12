@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include "../util/types.h"
-#include "../curves/zeroCouponCurve.h"
+#include "../market/zeroCouponCurve.h"
 
 class Leg {
 public:

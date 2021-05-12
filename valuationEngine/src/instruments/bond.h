@@ -2,9 +2,8 @@
 #define BOND_H
 
 #include "leg.h"
-#include "curves/zeroCouponCurve.h"
+#include "market/zeroCouponCurve.h"
 #include <memory>
-
 
 class Bond {
 public:
@@ -14,8 +13,7 @@ public:
     double operator()() const;
 
 private:
-    double calculatePresentValue(types::date date, double value, float numOfPaymentsInAYear) const;
-    float getNumOfPaymentsInAYear(const std::vector<types::date> &paymentCalendar) const;
+    double calculatePresentValue(types::date date, double value) const;
 
     // Variables
     std::unique_ptr<Leg> fixedLeg_;
