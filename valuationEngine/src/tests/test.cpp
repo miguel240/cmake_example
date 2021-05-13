@@ -15,6 +15,7 @@
 #include <market/zeroCouponCurve.h>
 #include <market/index.h>
 #include <instruments/bond.h>
+#include <instruments/swap.h>
 
 
 BOOST_AUTO_TEST_SUITE(day_count_fraction)
@@ -201,7 +202,6 @@ BOOST_AUTO_TEST_SUITE(legs)
         for (int i = 0; i < paymentValues.size(); i++) {
             BOOST_TEST(paymentValues.at(i) == correctValues.at(i), boost::test_tools::tolerance(1e-3));
         }
-
     }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -253,24 +253,59 @@ BOOST_AUTO_TEST_SUITE(instruments)
 
         types::Map zeroCurveData{
                 {paymentCalendar[0], 1.},
-                {paymentCalendar[1], 0.0474},
-                {paymentCalendar[2], 0.05},
-                {paymentCalendar[3], 0.051},
-                {paymentCalendar[4], 0.052},
+                {paymentCalendar[1], 0.05},
+                {paymentCalendar[2], 0.058},
+                {paymentCalendar[3], 0.064},
+                {paymentCalendar[4], 0.068},
         };
 
         typedef FixedLeg<Actual_360> FixedLegType;
         auto myZeroCouponCurve = std::make_shared<ZeroCouponCurve>(zeroCurveData, today);
         auto myFixedLeg = std::unique_ptr<Leg>{
-                std::make_unique<FixedLegType>(paymentCalendar, 100, 0.05)
+                std::make_unique<FixedLegType>(paymentCalendar, 100, 0.06)
         };
 
         auto myBond = Bond(myFixedLeg, myZeroCouponCurve);
-        BOOST_TEST_MESSAGE(myBond()); //todo: calcular ejemplo bono
+        BOOST_TEST_MESSAGE(myBond());
     }
 
     BOOST_AUTO_TEST_CASE(test_swap) {
 
+        BOOST_TEST_MESSAGE("Testing Swap instrument");
+
+        types::date today = DayCountCalculator::make_date("2016/4/1");
+        std::vector<types::date> paymentCalendar{
+                today,
+                DayCountCalculator::make_date("2016/10/3"),
+                DayCountCalculator::make_date("2017/4/3"),
+                DayCountCalculator::make_date("2017/10/2"),
+                DayCountCalculator::make_date("2018/04/2")};
+
+        types::Map zeroCurveData{
+                {paymentCalendar[0], 1.},
+                {paymentCalendar[1], 0.0474},
+                {paymentCalendar[2], 0.05},
+                {paymentCalendar[3], 0.051},
+                {paymentCalendar[4], 0.052},
+        };
+        auto myZeroCouponCurve = std::make_shared<ZeroCouponCurve>(zeroCurveData, today);
+
+        // Instance Fixed Leg
+        typedef FixedLeg<Actual_360> FixedLegType;
+        auto myFixedLeg = std::unique_ptr<Leg>{
+                std::make_unique<FixedLegType>(paymentCalendar, 100, 0.06)
+        };
+
+        // Instance Floating leg
+        typedef FloatingLeg<Actual_360> FloatingLegType;
+        auto myIndex = std::make_shared<Index>(2, myZeroCouponCurve);
+        auto myFloatingLeg = std::unique_ptr<Leg>{
+                std::make_unique<FloatingLegType>(paymentCalendar, 100, myIndex)
+        };
+
+        auto mySwap = Swap(myFixedLeg, myFloatingLeg, myZeroCouponCurve);
+
+        BOOST_TEST_MESSAGE(mySwap()); // todo: calcular caso transparencias
     }
 
 BOOST_AUTO_TEST_SUITE_END()
