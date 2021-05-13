@@ -78,10 +78,13 @@ BOOST_AUTO_TEST_SUITE(index_)
                 {DayCountCalculator::make_date("2018/04/2"), 0.052},
         };
 
+
         auto myZeroCouponCurve = std::make_shared<ZeroCouponCurve>(zeroCurveData, today);
         auto myIndex = Index(2, myZeroCouponCurve);
-        BOOST_TEST_MESSAGE(myIndex.calculateForwardRate(DayCountCalculator::make_date("2016/10/3"),
-                                                        DayCountCalculator::make_date("2017/4/3")));
+        double forwardRate = myIndex.calculateForwardRate(DayCountCalculator::make_date("2016/10/3"),
+                                                          DayCountCalculator::make_date("2017/4/3"));
+
+        BOOST_TEST(forwardRate == 0.0533, boost::test_tools::tolerance(1e-3));
     }
 
 BOOST_AUTO_TEST_SUITE_END()

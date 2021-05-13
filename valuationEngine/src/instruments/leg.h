@@ -8,27 +8,46 @@
 
 class Leg {
 public:
-    Leg(const std::vector<types::date> &paymentCalendar)
-            : paymenCalendar_{paymentCalendar} {};
+    Leg(const std::vector<types::date> &paymentCalendar, double nominal)
+            : paymentCalendar_{paymentCalendar}, nominal_{nominal} {};
 
-    virtual types::payments getPayments() const = 0;
+    virtual types::payments getPayments() const {
+        types::payments payments{};
+
+        // Obtain the payments (date, payment)
+        // calendar contains today's date in the first position
+        std::transform(paymentCalendar_.begin(),
+                       paymentCalendar_.end() - 1,
+                       paymentCalendar_.begin() + 1,
+                       std::back_inserter(payments),
+                       [&](const types::date &from, const types::date &to) {
+                           return std::make_pair(to, getPayment(from, to));
+                       });
+
+        return payments;
+    }
+
+    virtual double getPayment(types::date from, types::date to) const = 0;
 
     virtual double calculateDayFraction(types::date from, types::date to) const = 0;
 
-    virtual double getNominal() const = 0;
+    double getNominal() const {
+        return nominal_;
+    }
 
-    virtual double getRate() const = 0;
-
-    virtual types::date getMaturity() const = 0;
+    types::date getMaturity() const {
+        return paymentCalendar_.back();
+    };
 
     std::vector<types::date> getPaymentCalendar() const {
-        return paymenCalendar_;
+        return paymentCalendar_;
     }
 
     // virtual ~Leg();
 
-private:
-    std::vector<types::date> paymenCalendar_;
+protected:
+    std::vector<types::date> paymentCalendar_;
+    double nominal_;
 };
 
 #endif

@@ -4,22 +4,29 @@
 #include <utility>
 #include <string>
 #include <vector>
+#include <memory>
+#include "../market/
 
-class FloatingLeg {
+template<class DAY_COUNT_FRACTION>
+class FloatingLeg : public Leg {
 public:
-    FloatingLeg(const std::vector <std::string> &paymentCalendar,
-                double nominal, double index);
+    FloatingLeg(const std::vector<std::string> &paymentCalendar,
+                double nominal, std::shared_ptr index)
+            : Leg(paymentCalendar, nominal), index_{index};
 
-    virtual std::vector<std::pair<std::string, double>> getCalendarWithPayments() const;
+    double getPayment(types::date from, types::date to) const {
+        double fractionDate = dcfCalculator_(from, to);
+        double rate = index_.calculateForwardRate(from, to);
+        return nominal_ * rate * fractionDate;
+    };
+
+    double calculateDayFraction(types::date from, types::date to) const {
+        return dcfCalculator_(from, to);
+    }
 
 private:
-    double getPayment(std::string date) const;
-
-    // Variables
-    const std::vector<std::string> paymentCalendar_;
-    const double nominal_;
-    const double index_;
-    std::vector<std::pair<std::string, double>> payments_;
+    DAY_COUNT_FRACTION dcfCalculator_;
+    std::shared_ptr<Index> index_;
 };
 
 #endif
