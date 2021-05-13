@@ -199,7 +199,6 @@ BOOST_AUTO_TEST_SUITE(legs)
 
         // CHECK PAYS
         for (int i = 0; i < paymentValues.size(); i++) {
-            std::cout << paymentValues.at(i) << '\n';
             BOOST_TEST(paymentValues.at(i) == correctValues.at(i), boost::test_tools::tolerance(1e-3));
         }
 
