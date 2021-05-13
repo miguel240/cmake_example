@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE tests_prj
+#define BOOST_TEST_MODULE tests
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_tools.hpp>

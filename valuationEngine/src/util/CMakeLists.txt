@@ -1,2 +1,2 @@
-create_library(NAME common)
-set_target_properties(common PROPERTIES LINKER_LANGUAGE CXX)
+create_library(NAME util)
+set_target_properties(util PROPERTIES LINKER_LANGUAGE CXX)
