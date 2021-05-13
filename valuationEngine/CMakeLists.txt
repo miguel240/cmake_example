@@ -11,7 +11,7 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-lib)
 # - set home
 set(BOOST_ROOT /usr/include)
 # - Project libs to be linked
-set(LIBS_TO_LINK util curves instruments date_conventions)
+set(LIBS_TO_LINK util market instruments date_conventions)
 
 
 # Print some stuff

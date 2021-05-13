@@ -1,1 +1,1 @@
-create_library(NAME instruments)
+create_library(NAME instruments DEPS market)

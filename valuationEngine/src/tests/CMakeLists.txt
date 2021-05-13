@@ -1,1 +1,1 @@
-boost_test_project(NAME tests DEPS util curves instruments date_conventions)
+boost_test_project(NAME tests DEPS util market instruments date_conventions)

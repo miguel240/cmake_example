@@ -16,7 +16,7 @@ public:
              double rate) : Leg(paymentCalendar, nominal),
                             rate_{rate} {}
 
-    double getPayment(types::date from, types::date to) const {
+    virtual double getPayment(const types::date &from, const types::date &to) const {
         double fractionDate = dcfCalculator_(from, to);
         return nominal_ * rate_ * fractionDate;
     };
@@ -24,6 +24,8 @@ public:
     virtual double calculateDayFraction(types::date from, types::date to) const {
         return dcfCalculator_(from, to);
     }
+
+    ~FixedLeg() {};
 
 private:
     DAY_COUNT_FRACTION dcfCalculator_;

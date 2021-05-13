@@ -27,7 +27,7 @@ public:
         return payments;
     }
 
-    virtual double getPayment(types::date from, types::date to) const = 0;
+    virtual double getPayment(const types::date &from, const types::date &to) const = 0;
 
     virtual double calculateDayFraction(types::date from, types::date to) const = 0;
 
@@ -43,7 +43,7 @@ public:
         return paymentCalendar_;
     }
 
-    // virtual ~Leg();
+    ~Leg() {};
 
 protected:
     std::vector<types::date> paymentCalendar_;
