@@ -10,6 +10,7 @@
 
 #include "instruments/leg.h"
 #include "instruments/fixedLeg.h"
+#include "instruments/floatingLeg.h"
 
 #include <market/zeroCouponCurve.h>
 #include <market/index.h>
@@ -154,7 +155,53 @@ BOOST_AUTO_TEST_SUITE(legs)
 
     BOOST_AUTO_TEST_CASE(test_floating_leg)
     {
-        BOOST_TEST_MESSAGE("Testing Floating Leg");
+        BOOST_TEST_MESSAGE("Testing Floating Leg payments");
+
+        types::date today = DayCountCalculator::make_date("2016/4/1");
+        std::vector<types::date> paymentCalendar{
+                today,
+                DayCountCalculator::make_date("2016/10/3"),
+                DayCountCalculator::make_date("2017/4/3"),
+                DayCountCalculator::make_date("2017/10/2"),
+                DayCountCalculator::make_date("2018/04/2")};
+
+        types::Map zeroCurveData{
+                {paymentCalendar[0], 1.},
+                {paymentCalendar[1], 0.0474},
+                {paymentCalendar[2], 0.05},
+                {paymentCalendar[3], 0.051},
+                {paymentCalendar[4], 0.052},
+        };
+        auto myZeroCouponCurve = std::make_shared<ZeroCouponCurve>(zeroCurveData, today);
+        auto myIndex = std::make_shared<Index>(2, myZeroCouponCurve);
+
+        typedef FloatingLeg<Actual_360> FloatingLegType;
+        auto myFloatingLeg = std::unique_ptr<Leg>{
+                std::make_unique<FloatingLegType>(paymentCalendar, 100, myIndex)
+        };
+
+        auto payments = myFloatingLeg->getPayments();
+
+        std::vector<types::date> paymentsDates;
+        std::vector<double> paymentValues;
+
+        for (auto payment : payments) {
+            paymentsDates.push_back(payment.first);
+            paymentValues.push_back(payment.second);
+        }
+
+        std::vector<types::date> correctDates(paymentCalendar.begin() + 1, paymentCalendar.end());
+        std::vector<double> correctValues{2.467, 2.695, 2.716, 2.820};
+
+        // CHECK PAYMENTS DATES
+        BOOST_CHECK_EQUAL_COLLECTIONS(paymentsDates.begin(), paymentsDates.end(),
+                                      correctDates.begin(), correctDates.end());
+
+        // CHECK PAYS
+        for (int i = 0; i < paymentValues.size(); i++) {
+            std::cout << paymentValues.at(i) << '\n';
+            BOOST_TEST(paymentValues.at(i) == correctValues.at(i), boost::test_tools::tolerance(1e-3));
+        }
 
     }
 
