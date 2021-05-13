@@ -293,7 +293,7 @@ BOOST_AUTO_TEST_SUITE(instruments)
         // Instance Fixed Leg
         typedef FixedLeg<Actual_360> FixedLegType;
         auto myFixedLeg = std::unique_ptr<Leg>{
-                std::make_unique<FixedLegType>(paymentCalendar, 100, 0.06)
+                std::make_unique<FixedLegType>(paymentCalendar, 100, 0.05)
         };
 
         // Instance Floating leg
