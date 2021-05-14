@@ -2,12 +2,12 @@
 #include <numeric>
 #include <stdexcept>
 
-Bond::Bond(std::unique_ptr<Leg> &fixedLeg, std::shared_ptr<ZeroCouponCurve> zeroCouponCurve) :
+instruments::Bond::Bond(std::unique_ptr<Leg> &fixedLeg, std::shared_ptr<market::ZeroCouponCurve> zeroCouponCurve) :
         zeroCouponCurve_{zeroCouponCurve} {
     fixedLeg_ = std::move(fixedLeg);
 }
 
-double Bond::operator()() const {
+double instruments::Bond::operator()() const {
     types::payments paymentCalendar = fixedLeg_->getPayments();
 
     // In a bond the nominal is returned at maturity
@@ -23,7 +23,7 @@ double Bond::operator()() const {
                            });
 }
 
-double Bond::calculatePresentValue_(types::date date, double payment) const {
+double instruments::Bond::calculatePresentValue_(types::date date, double payment) const {
     if (!zeroCouponCurve_->getDiscountCurve(date)) throw "Zero coupon curve incomplete";
 
     double discountCurve = *zeroCouponCurve_->getDiscountCurve(date);

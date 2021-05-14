@@ -6,22 +6,23 @@
 #include <dayCountFraction/actual_360.h>
 #include "zeroCouponCurve.h"
 
-class Index {
-public:
-    // indexFrequency: times in a year (Euribor 6M = 2)
-    Index(float indexFrequency, std::shared_ptr<ZeroCouponCurve> zeroCouponCurve);
+namespace market {
+    class Index {
+    public:
+        // indexFrequency: times in a year (Euribor 6M = 2)
+        Index(float indexFrequency, std::shared_ptr<ZeroCouponCurve> zeroCouponCurve);
 
-    double calculateForwardRate(const types::date &from, const types::date &to) const;
+        double calculateForwardRate(const types::date &from, const types::date &to) const;
 
-private:
-    double getAnnualizedRate_(double rate) const;
+    private:
+        double getAnnualizedRate_(double rate) const;
 
-    // Variables
-    Actual_360 dcfCalculator_;
-    float indexFrequency_;
-    types::date today_;
-    std::shared_ptr<ZeroCouponCurve> zeroCouponCurve_;
-};
-
+        // Variables
+        day_count_fraction::Actual_360 dcfCalculator_;
+        float indexFrequency_;
+        types::date today_;
+        std::shared_ptr<ZeroCouponCurve> zeroCouponCurve_;
+    };
+}
 
 #endif

@@ -6,7 +6,6 @@
 #include <boost/date_time/gregorian/greg_date.hpp>
 #include <map>
 
-
 namespace types {
     typedef boost::gregorian::date date;
     typedef std::vector<std::pair<types::date, double>> payments;

@@ -1,11 +1,11 @@
 #include "index.h"
 
-Index::Index(float indexFrequency, std::shared_ptr<ZeroCouponCurve> zeroCouponCurve) :
+market::Index::Index(float indexFrequency, std::shared_ptr<ZeroCouponCurve> zeroCouponCurve) :
         indexFrequency_{indexFrequency},
         zeroCouponCurve_{zeroCouponCurve},
         today_{zeroCouponCurve->getTodayDate()} {}
 
-double Index::calculateForwardRate(const types::date &from, const types::date &to) const {
+double market::Index::calculateForwardRate(const types::date &from, const types::date &to) const {
     double currentYearFraction = dcfCalculator_(today_, to);
     double previousYearFraction = dcfCalculator_(today_, from);
 
@@ -20,6 +20,6 @@ double Index::calculateForwardRate(const types::date &from, const types::date &t
     return getAnnualizedRate_(forwardRate);
 }
 
-double Index::getAnnualizedRate_(double rate) const {
+double market::Index::getAnnualizedRate_(double rate) const {
     return indexFrequency_ * (std::exp(rate / indexFrequency_) - 1);
 }

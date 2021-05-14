@@ -17,6 +17,9 @@
 #include <instruments/bond.h>
 #include <instruments/swap.h>
 
+using namespace instruments;
+using namespace market;
+using namespace day_count_fraction;
 
 BOOST_AUTO_TEST_SUITE(day_count_fraction)
 
