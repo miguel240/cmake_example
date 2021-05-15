@@ -7,6 +7,10 @@
 #include <map>
 
 namespace types {
+    enum Conventions {
+        Actual360, Thirty360
+    };
+
     typedef boost::gregorian::date date;
     typedef std::vector<std::pair<types::date, double>> payments;
     typedef std::map<types::date, double> Map;

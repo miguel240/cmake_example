@@ -1,7 +1,7 @@
 #include <iostream>
 #include "instruments/instrumentFactory.h"
-#include "instruments/instrument.h"
 #include "dayCountFraction/dayCountCalculator.h"
+#include "util/types.h"
 
 int main() {
     std::vector<types::date> paymentCalendar{
@@ -23,14 +23,16 @@ int main() {
     auto myBond = instruments::InstrumentFactory::buildBond(100,
                                                             0.06,
                                                             paymentCalendar,
-                                                            zeroCurveData);
+                                                            zeroCurveData,
+                                                            types::Conventions::Actual360);
 
     // Create Swap
     auto mySwap = instruments::InstrumentFactory::buildSwap(100,
                                                             0.06,
                                                             2,
                                                             paymentCalendar,
-                                                            zeroCurveData);
+                                                            zeroCurveData,
+                                                            types::Conventions::Actual360);
 
     // Output
     std::cout << "Bond Price: " << myBond->operator()() << "\n";

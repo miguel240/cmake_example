@@ -8,7 +8,8 @@
 std::unique_ptr<instruments::IInstrument> instruments::InstrumentFactory::buildBond(double nominal,
                                                                                     double rate,
                                                                                     std::vector<types::date> &paymentCalendar,
-                                                                                    types::Map curveData) {
+                                                                                    types::Map curveData,
+                                                                                    types::Conventions convention) {
 
     types::date today = paymentCalendar.at(0);
 
@@ -27,6 +28,7 @@ std::unique_ptr<instruments::IInstrument> instruments::InstrumentFactory::buildS
                                                                                     float annualIndexFrequency,
                                                                                     const std::vector<types::date> &paymentCalendar,
                                                                                     const types::Map &curveData,
+                                                                                    types::Conventions convention,
                                                                                     bool isReceiverFixedLeg) {
 
     types::date today = paymentCalendar.at(0);

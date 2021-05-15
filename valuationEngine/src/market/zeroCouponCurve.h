@@ -24,14 +24,11 @@ namespace market {
         }
 
     private:
-        // Returns an element from the map
-        boost::optional<types::curvePair> getZeroCouponElement_(const types::date date) const;
-
-        // Variables
         types::Map curveData_;
         types::date today_;
         day_count_fraction::Actual_360 dcfCalculator_;
-        double fixedRate_;
+
+        double fixedRate_; // todo: preguntar
         bool isFixedRate = false;
     };
 }
