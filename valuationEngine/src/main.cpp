@@ -33,7 +33,7 @@ int main() {
                                                             zeroCurveData);
 
     // Output
-    std::cout << "Bond Price: " << myBond->operator()() << "\n"; // todo: preguntar
+    std::cout << "Bond Price: " << myBond->operator()() << "\n";
     std::cout << "Swap Price: " << mySwap->operator()();
 }
 

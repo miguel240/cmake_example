@@ -17,6 +17,9 @@
 #include <instruments/bond.h>
 #include <instruments/swap.h>
 
+#include <instruments/goalSeeker.h>
+#include <boost/math/tools/roots.hpp>
+
 using namespace instruments;
 using namespace market;
 using namespace day_count_fraction;
@@ -269,7 +272,7 @@ BOOST_AUTO_TEST_SUITE(instruments)
         };
 
         auto myBond = Bond(myFixedLeg, myZeroCouponCurve);
-        BOOST_TEST_MESSAGE(myBond());
+        BOOST_TEST(myBond() == 98.36078, boost::test_tools::tolerance(1e-5));
     }
 
     BOOST_AUTO_TEST_CASE(test_swap) {
@@ -310,5 +313,49 @@ BOOST_AUTO_TEST_SUITE(instruments)
 
         BOOST_TEST_MESSAGE(mySwap()); // todo: calcular caso transparencias
     }
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_AUTO_TEST_SUITE(tir)
+
+    BOOST_AUTO_TEST_CASE(test_goal_seeker) {
+
+        BOOST_TEST_MESSAGE("Testing TIR goal seeker");
+
+        types::date today = DayCountCalculator::make_date("2016/4/1");
+        std::vector<types::date> paymentCalendar{
+                today,
+                DayCountCalculator::make_date("2016/10/3"),
+                DayCountCalculator::make_date("2017/4/3"),
+                DayCountCalculator::make_date("2017/10/2"),
+                DayCountCalculator::make_date("2018/04/2")};
+
+        types::Map zeroCurveData{
+                {paymentCalendar[0], 1.},
+                {paymentCalendar[1], 0.05},
+                {paymentCalendar[2], 0.058},
+                {paymentCalendar[3], 0.064},
+                {paymentCalendar[4], 0.068},
+        };
+
+        typedef FixedLeg<Actual_360> FixedLegType;
+        auto myZeroCouponCurve = std::make_shared<ZeroCouponCurve>(zeroCurveData, today);
+        auto myFixedLeg = std::unique_ptr<Leg>{
+                std::make_unique<FixedLegType>(paymentCalendar, 100, 0.06)
+        };
+
+        auto myBond = Bond(myFixedLeg, myZeroCouponCurve);
+        double bondPrice = myBond();
+
+        auto seeker = GoalSeeker(10e-9, 10e-5, 10000);
+        auto myFunc = [&](double rate) {
+            myZeroCouponCurve->setFixedRate(rate);
+            return myBond();
+        };
+
+        BOOST_TEST(seeker(myFunc, bondPrice) == 0.067615, boost::test_tools::tolerance(1e-5));
+    }
+
 
 BOOST_AUTO_TEST_SUITE_END()

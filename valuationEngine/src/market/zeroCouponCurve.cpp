@@ -8,23 +8,24 @@ market::ZeroCouponCurve::ZeroCouponCurve(types::Map curveData, const types::date
 
 
 boost::optional<double> market::ZeroCouponCurve::getRate(types::date date) const {
+    if (isFixedRate) { return fixedRate_; }
+
     auto zeroCouponElement = getZeroCouponElement_(date);
     return zeroCouponElement ? zeroCouponElement->second : boost::optional<double>();
 }
 
 // Return e^-rt or null if not exist the date in the curveData
 boost::optional<double> market::ZeroCouponCurve::getDiscountCurve(types::date date) const {
-    auto zeroCouponElement = getZeroCouponElement_(date);
+    auto rate = getRate(date);
 
     // If key doesn't exists
-    if (!zeroCouponElement) {
+    if (!rate) {
         return boost::optional<double>();
     }
 
-    double rate = zeroCouponElement->second;
     double fractionDate = dcfCalculator_(today_, date);
 
-    return std::exp(-rate * fractionDate);
+    return std::exp(-(*rate) * fractionDate);
 }
 
 
