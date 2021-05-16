@@ -3,11 +3,12 @@
 
 market::ZeroCouponCurve::ZeroCouponCurve(types::Map curveData, const types::date today) :
         curveData_{curveData},
-        today_{today} {}
+        today_{today},
+        fixedRate_{} {}
 
 
 boost::optional<double> market::ZeroCouponCurve::getRate(types::date date) const {
-    if (isFixedRate) return fixedRate_;
+    if (fixedRate_) return fixedRate_;
 
     auto it = curveData_.find(date);
     return it != curveData_.end() ? it->second : boost::optional<double>();

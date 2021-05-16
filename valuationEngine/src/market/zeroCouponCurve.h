@@ -15,7 +15,6 @@ namespace market {
         boost::optional<double> getRate(types::date) const;
 
         void setFixedRate(double rate) {
-            isFixedRate = true;
             fixedRate_ = rate;
         }
 
@@ -27,9 +26,7 @@ namespace market {
         types::Map curveData_;
         types::date today_;
         day_count_fraction::Actual_360 dcfCalculator_;
-
-        double fixedRate_; // todo: preguntar
-        bool isFixedRate = false;
+        boost::optional<double> fixedRate_;
     };
 }
 
