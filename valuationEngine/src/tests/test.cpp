@@ -16,6 +16,8 @@
 #include <market/index.h>
 #include <instruments/bond.h>
 #include <instruments/swap.h>
+#include <instruments/deposit.h>
+
 
 #include <instruments/goalSeeker.h>
 #include <boost/math/tools/roots.hpp>
@@ -312,6 +314,36 @@ BOOST_AUTO_TEST_SUITE(instruments)
         auto mySwap = Swap(myFixedLeg, myFloatingLeg, myZeroCouponCurve);
 
         BOOST_TEST_MESSAGE(mySwap()); // todo: calcular caso transparencias
+    }
+
+    BOOST_AUTO_TEST_CASE(test_deposit) {
+
+        BOOST_TEST_MESSAGE("Testing Deposit instrument");
+
+        types::date today = DayCountCalculator::make_date("2016/4/1");
+        std::vector<types::date> paymentCalendar{
+                today,
+                DayCountCalculator::make_date("2016/10/3")};
+
+        types::Map zeroCurveData{
+                {paymentCalendar[0], 1.},
+                {paymentCalendar[1], 0.0474}
+        };
+
+        auto myZeroCouponCurve = std::make_shared<ZeroCouponCurve>(zeroCurveData, today);
+
+        // Instance Fixed Leg
+        typedef FixedLeg<Actual_360> FixedLegType;
+        auto myFixedLeg = std::unique_ptr<Leg>{
+                std::make_unique<FixedLegType>(paymentCalendar, 100, 0.05)
+        };
+
+        // Instance doposit
+        auto myDeposit = Deposit(myFixedLeg, myZeroCouponCurve);
+
+        BOOST_TEST(myDeposit() == 100.1012068, boost::test_tools::tolerance(1e-7));
+
+
     }
 
 BOOST_AUTO_TEST_SUITE_END()
