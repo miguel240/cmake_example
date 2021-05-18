@@ -14,6 +14,10 @@ namespace market {
 
         double calculateForwardRate(const types::date &from, const types::date &to) const;
 
+        boost::optional<double> getZeroCouponRate(types::date date) const {
+            return zeroCouponCurve_->getRate(date);
+        }
+
     private:
         double getAnnualizedRate_(double rate) const;
 

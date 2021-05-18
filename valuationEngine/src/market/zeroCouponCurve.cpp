@@ -1,7 +1,7 @@
 #include <valarray>
 #include "zeroCouponCurve.h"
 
-market::ZeroCouponCurve::ZeroCouponCurve(types::Map curveData, const types::date today) :
+market::ZeroCouponCurve::ZeroCouponCurve(types::MapDiscountCurveType curveData, const types::date today) :
         curveData_{curveData},
         today_{today},
         fixedRate_{} {}

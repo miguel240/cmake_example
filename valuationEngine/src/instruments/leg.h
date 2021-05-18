@@ -30,7 +30,13 @@ namespace instruments {
 
         virtual double getPayment(const types::date &from, const types::date &to) const = 0;
 
+        virtual double getRate(types::date to, types::date from) const = 0;
+
+        virtual void setRate(double rate) = 0;
+
         virtual double calculateDayFraction(types::date from, types::date to) const = 0;
+
+        virtual bool isFixed() const = 0;
 
         double getNominal() const {
             return nominal_;

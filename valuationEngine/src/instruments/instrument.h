@@ -8,6 +8,8 @@ namespace instruments {
     public:
         virtual double operator()() const = 0;
 
+        virtual double computeDiscountFactor(double &preAnnuity) const = 0;
+
         virtual ~IInstrument() {};
 
     private:

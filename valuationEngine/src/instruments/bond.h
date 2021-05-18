@@ -14,6 +14,8 @@ namespace instruments {
 
         double operator()() const;
 
+        double computeDiscountFactor(double &preAnnuity) const;
+
     private:
         double calculatePresentValue_(types::date date, double value) const;
 

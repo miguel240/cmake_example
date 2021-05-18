@@ -20,6 +20,7 @@
 
 
 #include <instruments/goalSeeker.h>
+#include <market/bootstrapping.h>
 #include <boost/math/tools/roots.hpp>
 
 using namespace instruments;
@@ -80,7 +81,7 @@ BOOST_AUTO_TEST_SUITE(index_)
         BOOST_TEST_MESSAGE("Testing Index forward rate");
 
         types::date today = DayCountCalculator::make_date("2016/4/1");
-        types::Map zeroCurveData{
+        types::MapDiscountCurveType zeroCurveData{
                 {today,                                      1.},
                 {DayCountCalculator::make_date("2016/10/3"), 0.0474},
                 {DayCountCalculator::make_date("2017/4/3"),  0.05},
@@ -174,7 +175,7 @@ BOOST_AUTO_TEST_SUITE(legs)
                 DayCountCalculator::make_date("2017/10/2"),
                 DayCountCalculator::make_date("2018/04/2")};
 
-        types::Map zeroCurveData{
+        types::MapDiscountCurveType zeroCurveData{
                 {paymentCalendar[0], 1.},
                 {paymentCalendar[1], 0.0474},
                 {paymentCalendar[2], 0.05},
@@ -200,7 +201,7 @@ BOOST_AUTO_TEST_SUITE(legs)
         }
 
         std::vector<types::date> correctDates(paymentCalendar.begin() + 1, paymentCalendar.end());
-        std::vector<double> correctValues{2.467, 2.695, 2.716, 2.820};
+        std::vector<double> correctValues{2.46492, 2.69672, 2.71611, 2.81999};
 
         // CHECK PAYMENTS DATES
         BOOST_CHECK_EQUAL_COLLECTIONS(paymentsDates.begin(), paymentsDates.end(),
@@ -208,7 +209,7 @@ BOOST_AUTO_TEST_SUITE(legs)
 
         // CHECK PAYS
         for (int i = 0; i < paymentValues.size(); i++) {
-            BOOST_TEST(paymentValues.at(i) == correctValues.at(i), boost::test_tools::tolerance(1e-3));
+            BOOST_TEST(paymentValues.at(i) == correctValues.at(i), boost::test_tools::tolerance(1e-5));
         }
     }
 
@@ -229,7 +230,7 @@ BOOST_AUTO_TEST_SUITE(zero_coupon)
                 DayCountCalculator::make_date("2018/04/2")};
 
 
-        types::Map zeroCurveData{
+        types::MapDiscountCurveType zeroCurveData{
                 {paymentCalendar[0], 1.},
                 {paymentCalendar[1], 0.0474},
                 {paymentCalendar[2], 0.05},
@@ -241,6 +242,103 @@ BOOST_AUTO_TEST_SUITE(zero_coupon)
         auto zcRate = myZeroCouponCurve->getDiscountCurve(paymentCalendar.at(1));
 
         BOOST_TEST(*zcRate == 0.97593577, boost::test_tools::tolerance(1e-6));
+    }
+
+    BOOST_AUTO_TEST_CASE(test_bootstrapping)
+    {
+        BOOST_TEST_MESSAGE("Testing Bootstrapping");
+
+        types::date today = DayCountCalculator::make_date("2016/4/1");
+
+        std::vector<types::date> deposit6MCalendar{
+                today,
+                DayCountCalculator::make_date("2016/10/3")};
+
+        std::vector<types::date> bond12MCalendar{
+                today,
+                DayCountCalculator::make_date("2016/10/3"),
+                DayCountCalculator::make_date("2017/4/3")};
+
+        std::vector<types::date> bond18MCalendar{
+                today,
+                DayCountCalculator::make_date("2016/10/3"),
+                DayCountCalculator::make_date("2017/4/3"),
+                DayCountCalculator::make_date("2017/10/2")};
+
+        std::vector<types::date> bond24MCalendar{
+                today,
+                DayCountCalculator::make_date("2016/10/3"),
+                DayCountCalculator::make_date("2017/4/3"),
+                DayCountCalculator::make_date("2017/10/2"),
+                DayCountCalculator::make_date("2018/04/2")};
+
+        types::MapDiscountCurveType zeroCurveData{};
+
+        // ZC Curve
+        auto myZeroCouponCurve = std::make_shared<ZeroCouponCurve>(zeroCurveData, today);
+
+        // Instance Fixed Leg
+        typedef FixedLeg<Actual_360> FixedLegType;
+
+        auto myFixedLeg6M = std::unique_ptr<Leg>{
+                std::make_unique<FixedLegType>(deposit6MCalendar, 100, 0.05)
+        };
+
+        auto myFixedLeg12M = std::unique_ptr<Leg>{
+                std::make_unique<FixedLegType>(bond12MCalendar, 100, 0.055)
+        };
+
+        auto myFixedLeg18M = std::unique_ptr<Leg>{
+                std::make_unique<FixedLegType>(bond18MCalendar, 100, 0.06)
+        };
+
+        auto myFixedLeg24M = std::unique_ptr<Leg>{
+                std::make_unique<FixedLegType>(bond24MCalendar, 100, 0.064)
+        };
+
+        // Instance Instruments
+        // Second leg on the swap instantiation is irrelevant
+        auto myDeposit6M = std::shared_ptr<IInstrument>{
+                std::make_shared<Deposit>(myFixedLeg6M, myZeroCouponCurve)
+        };
+
+        auto mySwap12M = std::shared_ptr<IInstrument>{
+                std::make_shared<Swap>(myFixedLeg12M, myFixedLeg12M, myZeroCouponCurve)
+        };
+
+        auto mySwap18M = std::shared_ptr<IInstrument>{
+                std::make_shared<Swap>(myFixedLeg18M, myFixedLeg12M, myZeroCouponCurve)
+        };
+
+
+        auto mySwap24M = std::shared_ptr<IInstrument>{
+                std::make_shared<Swap>(myFixedLeg24M, myFixedLeg12M, myZeroCouponCurve)
+        };
+
+        // Bootstrapping
+        typedef std::map<types::date, std::shared_ptr<instruments::IInstrument>> InstrumentMapType;
+        InstrumentMapType instruments{
+                {deposit6MCalendar.back(), myDeposit6M},
+                {bond12MCalendar.back(),   mySwap12M},
+                {bond18MCalendar.back(),   mySwap18M},
+                {bond24MCalendar.back(),   mySwap24M}
+        };
+
+        auto myBootstrapping = Bootstrapping();
+        auto discountCurveCalibrated = myBootstrapping(instruments);
+        std::map<types::date, double> correctDiscountCurve{
+                {DayCountCalculator::make_date("2016/10/3"), 0.9749492},
+                {DayCountCalculator::make_date("2017/4/3"),  0.9461362},
+                {DayCountCalculator::make_date("2017/10/2"), 0.9135292},
+                {DayCountCalculator::make_date("2018/04/2"), 0.8793138}
+        };
+
+        for (auto it = discountCurveCalibrated.begin(); it != discountCurveCalibrated.end(); ++it) {
+            types::date date = it->first;
+            double discountFactor = it->second;
+
+            BOOST_TEST(discountFactor == correctDiscountCurve.find(date)->second, boost::test_tools::tolerance(1e-6));
+        }
     }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -259,7 +357,7 @@ BOOST_AUTO_TEST_SUITE(instruments)
                 DayCountCalculator::make_date("2017/10/2"),
                 DayCountCalculator::make_date("2018/04/2")};
 
-        types::Map zeroCurveData{
+        types::MapDiscountCurveType zeroCurveData{
                 {paymentCalendar[0], 1.},
                 {paymentCalendar[1], 0.05},
                 {paymentCalendar[2], 0.058},
@@ -289,7 +387,7 @@ BOOST_AUTO_TEST_SUITE(instruments)
                 DayCountCalculator::make_date("2017/10/2"),
                 DayCountCalculator::make_date("2018/04/2")};
 
-        types::Map zeroCurveData{
+        types::MapDiscountCurveType zeroCurveData{
                 {paymentCalendar[0], 1.},
                 {paymentCalendar[1], 0.0474},
                 {paymentCalendar[2], 0.05},
@@ -313,7 +411,7 @@ BOOST_AUTO_TEST_SUITE(instruments)
 
         auto mySwap = Swap(myFixedLeg, myFloatingLeg, myZeroCouponCurve);
 
-        BOOST_TEST_MESSAGE(mySwap()); // todo: calcular caso transparencias
+        BOOST_TEST(mySwap() == 0.49573, boost::test_tools::tolerance(1e-5));
     }
 
     BOOST_AUTO_TEST_CASE(test_deposit) {
@@ -325,7 +423,7 @@ BOOST_AUTO_TEST_SUITE(instruments)
                 today,
                 DayCountCalculator::make_date("2016/10/3")};
 
-        types::Map zeroCurveData{
+        types::MapDiscountCurveType zeroCurveData{
                 {paymentCalendar[0], 1.},
                 {paymentCalendar[1], 0.0474}
         };
@@ -338,7 +436,7 @@ BOOST_AUTO_TEST_SUITE(instruments)
                 std::make_unique<FixedLegType>(paymentCalendar, 100, 0.05)
         };
 
-        // Instance doposit
+        // Instance deposit
         auto myDeposit = Deposit(myFixedLeg, myZeroCouponCurve);
 
         BOOST_TEST(myDeposit() == 100.1012068, boost::test_tools::tolerance(1e-7));
@@ -363,7 +461,7 @@ BOOST_AUTO_TEST_SUITE(tir)
                 DayCountCalculator::make_date("2017/10/2"),
                 DayCountCalculator::make_date("2018/04/2")};
 
-        types::Map zeroCurveData{
+        types::MapDiscountCurveType zeroCurveData{
                 {paymentCalendar[0], 1.},
                 {paymentCalendar[1], 0.05},
                 {paymentCalendar[2], 0.058},

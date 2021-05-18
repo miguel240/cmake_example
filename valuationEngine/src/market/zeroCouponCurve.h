@@ -8,7 +8,7 @@
 namespace market {
     class ZeroCouponCurve {
     public:
-        ZeroCouponCurve(types::Map curveData, types::date today);
+        ZeroCouponCurve(types::MapDiscountCurveType curveData, types::date today);
 
         boost::optional<double> getDiscountCurve(types::date date) const;
 
@@ -23,7 +23,7 @@ namespace market {
         }
 
     private:
-        types::Map curveData_;
+        types::MapDiscountCurveType curveData_;
         types::date today_;
         day_count_fraction::Actual_360 dcfCalculator_;
         boost::optional<double> fixedRate_;

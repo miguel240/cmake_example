@@ -17,13 +17,25 @@ namespace instruments {
                  double rate) : Leg(paymentCalendar, nominal),
                                 rate_{rate} {}
 
-        virtual double getPayment(const types::date &from, const types::date &to) const {
+        double getPayment(const types::date &from, const types::date &to) const {
             double fractionDate = dcfCalculator_(from, to);
             return nominal_ * rate_ * fractionDate;
         };
 
-        virtual double calculateDayFraction(types::date from, types::date to) const {
+        double getRate(types::date from, types::date to) const {
+            return rate_;
+        }
+
+        void setRate(double rate) {
+            rate_ = rate;
+        }
+
+        double calculateDayFraction(types::date from, types::date to) const {
             return dcfCalculator_(from, to);
+        }
+
+        bool isFixed() const {
+            return true;
         }
 
         ~FixedLeg() {};

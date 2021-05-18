@@ -11,7 +11,7 @@ namespace instruments {
         static std::unique_ptr<instruments::IInstrument> buildBond(double nominal,
                                                                    double rate,
                                                                    std::vector<types::date> &paymentCalendar,
-                                                                   types::Map curveData,
+                                                                   types::MapDiscountCurveType curveData,
                                                                    types::Conventions convention);
 
 
@@ -19,7 +19,7 @@ namespace instruments {
                                                                    double rate,
                                                                    float annualIndexFrequency,
                                                                    const std::vector<types::date> &paymentCalendar,
-                                                                   const types::Map &curveData,
+                                                                   const types::MapDiscountCurveType &curveData,
                                                                    types::Conventions convention,
                                                                    bool isReceiverFixedLeg = true);
 

@@ -14,14 +14,24 @@ namespace instruments {
                     std::shared_ptr<market::Index> index)
                 : Leg(paymentCalendar, nominal), index_{index} {};
 
-        virtual double getPayment(const types::date &from, const types::date &to) const {
+        double getPayment(const types::date &from, const types::date &to) const {
             double fractionDate = dcfCalculator_(from, to);
             double rate = index_->calculateForwardRate(from, to);
             return nominal_ * rate * fractionDate;
         };
 
+        double getRate(types::date from, types::date to) const {
+            return index_->calculateForwardRate(from, to);
+        }
+
+        void setRate(double rate) {}
+
         virtual double calculateDayFraction(types::date from, types::date to) const {
             return dcfCalculator_(from, to);
+        }
+
+        bool isFixed() const {
+            return false;
         }
 
         ~FloatingLeg() {};

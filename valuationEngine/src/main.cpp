@@ -11,7 +11,7 @@ int main() {
             day_count_fraction::DayCountCalculator::make_date("2017/10/2"),
             day_count_fraction::DayCountCalculator::make_date("2018/04/2")};
 
-    types::Map zeroCurveData{
+    types::MapDiscountCurveType zeroCurveData{
             {paymentCalendar[0], 1.},
             {paymentCalendar[1], 0.05},
             {paymentCalendar[2], 0.058},

@@ -13,6 +13,8 @@ namespace instruments {
 
         double operator()() const;
 
+        double computeDiscountFactor(double &preAnnuity) const ;
+
     private:
         double calculateTotal_(const types::payments &payments) const;
 
