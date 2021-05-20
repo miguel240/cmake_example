@@ -1,65 +1,25 @@
 #include "instrumentFactory.h"
-#include "leg.h"
-#include "fixedLeg.h"
-#include "floatingLeg.h"
-#include "bond.h"
-#include "swap.h"
-
-std::unique_ptr<instruments::IInstrument> instruments::InstrumentFactory::buildBond(double nominal,
-                                                                                    double rate,
-                                                                                    std::vector<types::date> &paymentCalendar,
-                                                                                    types::MapDiscountCurveType curveData,
-                                                                                    types::Conventions convention) {
-
-    types::date today = paymentCalendar.at(0);
-
-    typedef FixedLeg<day_count_fraction::Actual_360> FixedLegType; // todo:: modify
-    auto myZeroCouponCurve = std::make_shared<market::ZeroCouponCurve>(curveData, today);
-    auto myFixedLeg = std::unique_ptr<Leg>{
-            std::make_unique<FixedLegType>(paymentCalendar, nominal, rate)
-    };
-
-    // Return an instrument of type bond
-    return std::make_unique<instruments::Bond>(myFixedLeg, myZeroCouponCurve);
-}
-
-std::unique_ptr<instruments::IInstrument> instruments::InstrumentFactory::buildSwap(double nominal,
-                                                                                    double rate,
-                                                                                    float annualIndexFrequency,
-                                                                                    const std::vector<types::date> &paymentCalendar,
-                                                                                    const types::MapDiscountCurveType &curveData,
-                                                                                    types::Conventions convention,
-                                                                                    bool isReceiverFixedLeg) {
-
-    types::date today = paymentCalendar.at(0);
-
-    // Instance Fixed Leg
-    typedef FixedLeg<day_count_fraction::Actual_360> FixedLegType; // todo:: modify
-    auto myZeroCouponCurve = std::make_shared<market::ZeroCouponCurve>(curveData, today);
-    auto myFixedLeg = std::unique_ptr<Leg>{
-            std::make_unique<FixedLegType>(paymentCalendar, nominal, rate)
-    };
 
 
-    // Instance Floating leg
-    typedef FloatingLeg<day_count_fraction::Actual_360> FloatingLegType; // todo:: modify
-    auto myIndex = std::make_shared<market::Index>(annualIndexFrequency, myZeroCouponCurve);
-    auto myFloatingLeg = std::unique_ptr<Leg>{
-            std::make_unique<FloatingLegType>(paymentCalendar, nominal, myIndex)
-    };
+instruments::InstrumentFactory::InstrumentFactory() {} // Private
 
-    // Receiver and payer
-    std::unique_ptr<Leg> myReceiver;
-    std::unique_ptr<Leg> myPayer;
 
-    if (isReceiverFixedLeg) {
-        myReceiver = std::move(myFixedLeg);
-        myPayer = std::move(myFloatingLeg);
-    } else {
-        myPayer = std::move(myFixedLeg);
-        myReceiver = std::move(myFloatingLeg);
+std::unique_ptr<instruments::IInstrument>
+    instruments::InstrumentFactory::operator()(const InstrumentDescription &description) const {
+
+    auto builder = buildersMap_.find(description.type);
+
+    if (builder == buildersMap_.end()) {
+        throw std::runtime_error("Invalid payoff descriptor");
     }
 
-    // Return an instrument of type swap
-    return std::make_unique<Swap>(myPayer, myReceiver, myZeroCouponCurve);
+    return (builder->second)(description); // Call Build Function
 }
+
+// Add [instrument: build function] to the map
+void instruments::InstrumentFactory::registerConstructor(const InstrumentDescription::Type &id,
+                                                         const InstrumentFactory::Builder &builder) {
+
+    buildersMap_.insert(std::make_pair(id, builder));
+}
+

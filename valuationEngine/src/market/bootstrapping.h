@@ -4,16 +4,17 @@
 #include <instruments/instrument.h>
 #include "util/types.h"
 
-class Bootstrapping {
-public:
-    Bootstrapping() {};
+namespace market {
+    class Bootstrapping {
+    public:
+        Bootstrapping() {};
 
-    typedef std::map<types::date, std::shared_ptr<instruments::IInstrument>> InstrumentMapType;
+        typedef std::map<types::date, std::shared_ptr<instruments::IInstrument>> InstrumentMapType;
 
-    types::MapDiscountCurveType operator()(const InstrumentMapType &instruments) const;
+        types::MapDiscountCurveType operator()(const InstrumentMapType &instruments) const;
 
-    virtual ~Bootstrapping() {};
-};
-
+        virtual ~Bootstrapping() {};
+    };
+}
 
 #endif

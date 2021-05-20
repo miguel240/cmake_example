@@ -1,7 +1,8 @@
 #include <iostream>
-#include "instruments/instrumentFactory.h"
 #include "dayCountFraction/dayCountCalculator.h"
-#include "util/types.h"
+#include "instruments/instrumentFactory.h"
+#include "instruments/bondBuilder.h"
+
 
 int main() {
     std::vector<types::date> paymentCalendar{
@@ -19,24 +20,32 @@ int main() {
             {paymentCalendar[4], 0.068},
     };
 
-    // Create Bond
-    auto myBond = instruments::InstrumentFactory::buildBond(100,
-                                                            0.06,
-                                                            paymentCalendar,
-                                                            zeroCurveData,
-                                                            types::Conventions::Actual360);
+    instruments::LegDescription fixedLegDescription;
+    fixedLegDescription.paymentCalendar = paymentCalendar;
+    fixedLegDescription.nominal = 100;
+    fixedLegDescription.rate = 0.06;
 
-    // Create Swap
-    auto mySwap = instruments::InstrumentFactory::buildSwap(100,
-                                                            0.06,
-                                                            2,
-                                                            paymentCalendar,
-                                                            zeroCurveData,
-                                                            types::Conventions::Actual360);
+    instruments::InstrumentDescription instrumentDescription(instruments::InstrumentDescription::Type::bond);
+    instrumentDescription.curveData = zeroCurveData;
+    instrumentDescription.receiver = fixedLegDescription;
 
-    // Output
-    std::cout << "Bond Price: " << myBond->operator()() << "\n";
-    std::cout << "Swap Price: " << mySwap->operator()();
+
+
+    //auto myBond = instruments::BondBuilder::build(instrumentDescription);
+    auto myBond = instruments::InstrumentFactory::instance()(instrumentDescription);
+
+
+     // Create Swap
+     /*auto mySwap = instruments::InstrumentFactory::buildSwap(100,
+                                                             0.06,
+                                                             2,
+                                                             paymentCalendar,
+                                                             zeroCurveData,
+                                                             types::Conventions::Actual360);*/
+
+     // Output
+     std::cout << "Bond Price: " << myBond->operator()() << "\n";
+     //std::cout << "Swap Price: " << mySwap->operator()();*/
 }
 
 

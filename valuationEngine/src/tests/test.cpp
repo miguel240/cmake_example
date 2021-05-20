@@ -18,10 +18,10 @@
 #include <instruments/swap.h>
 #include <instruments/deposit.h>
 
-
 #include <instruments/goalSeeker.h>
 #include <market/bootstrapping.h>
-#include <boost/math/tools/roots.hpp>
+#include <instruments/instrumentDescription.h>
+#include <instruments/instrumentFactory.h>
 
 using namespace instruments;
 using namespace market;
@@ -88,7 +88,6 @@ BOOST_AUTO_TEST_SUITE(index_)
                 {DayCountCalculator::make_date("2017/10/2"), 0.051},
                 {DayCountCalculator::make_date("2018/04/2"), 0.052},
         };
-
 
         auto myZeroCouponCurve = std::make_shared<ZeroCouponCurve>(zeroCurveData, today);
         auto myIndex = Index(2, myZeroCouponCurve);
@@ -217,7 +216,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(zero_coupon)
 
-    BOOST_AUTO_TEST_CASE(test_zc_date)
+    BOOST_AUTO_TEST_CASE(test_zeroCoupon_date)
     {
         BOOST_TEST_MESSAGE("Testing Zero Coupon discount curve");
 
@@ -487,5 +486,111 @@ BOOST_AUTO_TEST_SUITE(tir)
         BOOST_TEST(seeker(myFunc, bondPrice) == 0.067615, boost::test_tools::tolerance(1e-5));
     }
 
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(factories)
+
+    BOOST_AUTO_TEST_CASE(test_bond_factory) {
+
+        BOOST_TEST_MESSAGE("Testing Bond Factory");
+
+        std::vector<types::date> paymentCalendar{
+                day_count_fraction::DayCountCalculator::make_date("2016/4/1"),
+                day_count_fraction::DayCountCalculator::make_date("2016/10/3"),
+                day_count_fraction::DayCountCalculator::make_date("2017/4/3"),
+                day_count_fraction::DayCountCalculator::make_date("2017/10/2"),
+                day_count_fraction::DayCountCalculator::make_date("2018/04/2")};
+
+        types::MapDiscountCurveType zeroCurveData{
+                {paymentCalendar[0], 1.},
+                {paymentCalendar[1], 0.05},
+                {paymentCalendar[2], 0.058},
+                {paymentCalendar[3], 0.064},
+                {paymentCalendar[4], 0.068},
+        };
+
+        instruments::LegDescription fixedLegDescription;
+        fixedLegDescription.paymentCalendar = paymentCalendar;
+        fixedLegDescription.nominal = 100;
+        fixedLegDescription.rate = 0.06;
+
+        instruments::InstrumentDescription instrumentDescription(instruments::InstrumentDescription::Type::bond);
+        instrumentDescription.curveData = zeroCurveData;
+        instrumentDescription.receiver = fixedLegDescription;
+
+        auto myBond = instruments::InstrumentFactory::instance()(instrumentDescription);
+
+        BOOST_TEST(myBond->operator()() == 98.36078, boost::test_tools::tolerance(1e-5));
+    }
+
+    BOOST_AUTO_TEST_CASE(test_deposit_factory) {
+
+        BOOST_TEST_MESSAGE("Testing Deposit Factory");
+
+        types::date today = DayCountCalculator::make_date("2016/4/1");
+        std::vector<types::date> paymentCalendar{
+                today,
+                DayCountCalculator::make_date("2016/10/3")};
+
+        types::MapDiscountCurveType zeroCurveData{
+                {paymentCalendar[0], 1.},
+                {paymentCalendar[1], 0.0474}
+        };
+
+        instruments::LegDescription fixedLegDescription;
+        fixedLegDescription.paymentCalendar = paymentCalendar;
+        fixedLegDescription.nominal = 100;
+        fixedLegDescription.rate = 0.05;
+
+        instruments::InstrumentDescription instrumentDescription(instruments::InstrumentDescription::Type::deposit);
+        instrumentDescription.curveData = zeroCurveData;
+        instrumentDescription.receiver = fixedLegDescription;
+
+        auto myDeposit = instruments::InstrumentFactory::instance()(instrumentDescription);
+
+        BOOST_TEST(myDeposit->operator()() == 100.1012068, boost::test_tools::tolerance(1e-7));
+
+    }
+
+    BOOST_AUTO_TEST_CASE(test_swap_factory) {
+
+        BOOST_TEST_MESSAGE("Testing Swap Factory");
+
+        types::date today = DayCountCalculator::make_date("2016/4/1");
+        std::vector<types::date> paymentCalendar{
+                today,
+                DayCountCalculator::make_date("2016/10/3"),
+                DayCountCalculator::make_date("2017/4/3"),
+                DayCountCalculator::make_date("2017/10/2"),
+                DayCountCalculator::make_date("2018/04/2")};
+
+        types::MapDiscountCurveType zeroCurveData{
+                {paymentCalendar[0], 1.},
+                {paymentCalendar[1], 0.0474},
+                {paymentCalendar[2], 0.05},
+                {paymentCalendar[3], 0.051},
+                {paymentCalendar[4], 0.052},
+        };
+
+        instruments::LegDescription fixedLegDescription;
+        fixedLegDescription.paymentCalendar = paymentCalendar;
+        fixedLegDescription.nominal = 100;
+        fixedLegDescription.rate = 0.05;
+
+        instruments::LegDescription floatingLegDescription;
+        floatingLegDescription.paymentCalendar = paymentCalendar;
+        floatingLegDescription.nominal = 100;
+        floatingLegDescription.indexFrequency = 2;
+
+        instruments::InstrumentDescription instrumentDescription(instruments::InstrumentDescription::Type::swap);
+        instrumentDescription.curveData = zeroCurveData;
+        instrumentDescription.receiver = fixedLegDescription;
+        instrumentDescription.payer = floatingLegDescription;
+
+        auto mySwap = instruments::InstrumentFactory::instance()(instrumentDescription);
+
+        BOOST_TEST(mySwap->operator()() == 0.49573, boost::test_tools::tolerance(1e-5));
+    }
 
 BOOST_AUTO_TEST_SUITE_END()

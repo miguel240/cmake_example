@@ -1,6 +1,6 @@
 #include "bootstrapping.h"
 
-types::MapDiscountCurveType Bootstrapping::operator()(const Bootstrapping::InstrumentMapType &instruments) const {
+types::MapDiscountCurveType market::Bootstrapping::operator()(const Bootstrapping::InstrumentMapType &instruments) const {
     types::MapDiscountCurveType curve;
     double annuity = 0;
 

@@ -1,31 +1,32 @@
 #ifndef INSTRUMENT_FACTORY_H
 #define INSTRUMENT_FACTORY_H
 
-#include "instrument.h"
-#include "../util/types.h"
+#include "instrumentDescription.h"
+#include "instruments/instrument.h"
 
 namespace instruments {
+
     class InstrumentFactory {
     public:
+        std::unique_ptr<IInstrument> operator()(const InstrumentDescription &description) const;
 
-        static std::unique_ptr<instruments::IInstrument> buildBond(double nominal,
-                                                                   double rate,
-                                                                   std::vector<types::date> &paymentCalendar,
-                                                                   types::MapDiscountCurveType curveData,
-                                                                   types::Conventions convention);
+        typedef std::function<std::unique_ptr<IInstrument>(const InstrumentDescription &)> Builder;
 
+        void registerConstructor(const InstrumentDescription::Type &id, const Builder &builder);
 
-        static std::unique_ptr<instruments::IInstrument> buildSwap(double nominal,
-                                                                   double rate,
-                                                                   float annualIndexFrequency,
-                                                                   const std::vector<types::date> &paymentCalendar,
-                                                                   const types::MapDiscountCurveType &curveData,
-                                                                   types::Conventions convention,
-                                                                   bool isReceiverFixedLeg = true);
+        // Singleton
+        static InstrumentFactory &instance() {
+            static InstrumentFactory factory;
+            return factory;
+        }
 
+        virtual ~InstrumentFactory() {};
+    private:
+        InstrumentFactory(); // Force to call instance()
 
+        std::map<InstrumentDescription::Type, Builder> buildersMap_;
     };
-}
 
+}
 
 #endif
