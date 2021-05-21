@@ -12,7 +12,7 @@ namespace instruments {
         Leg(const std::vector<types::date> &paymentCalendar, double nominal)
                 : paymentCalendar_{paymentCalendar}, nominal_{nominal} {};
 
-        virtual types::payments getPayments() const {
+        types::payments getPayments() const {
             types::payments payments{};
 
             // Obtain the payments (date, payment)
